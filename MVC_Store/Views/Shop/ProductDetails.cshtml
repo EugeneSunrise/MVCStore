@@ -1,0 +1,89 @@
+﻿@model MVC_Store.Models.ViewModels.Shop.ProductVM
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@Model.Name</h2>
+<br />
+
+<div class="row">
+    <div class="col-sm-12 col-md-5">
+        <img src="/Images/Uploads/Products/@Model.Id/Thumbs/@Model.ImageName" />
+    </div>
+
+    <div class="col-sm-12 col-md-7">
+        @Html.DisplayFor(model => model.Description)
+        <br />
+        @Html.DisplayFor(model => model.Price) €
+
+        @if (Request.IsAuthenticated)
+        {
+            <div class="addtocart">
+                <a href="#" class="addtocart btn btn-success">Add to cart</a>
+                <span class="loader">
+                    <img src="~/Content/img/ajax-loader.gif" height="100" width="150"/>
+                </span>
+                <div class="ajaxmsg">
+                    The product has been added to your cart.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div>Please, login</div>
+        }
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <h3>Product Gallery</h3>
+    <div class="col-sm-12 fancyboxdiv">
+        <br /><br />
+        <div class="row">
+            @foreach (var item in Model.GalleryImages)
+            {
+                <div class="col">
+                    <a class="fancybox" rel="gallery1" href="/Images/Uploads/Products/@Model.Id/Gallery/@item">
+                        <img src="/Images/Uploads/Products/@Model.Id/Gallery/Thumbs/@item" />
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link href="~/Content/jquery.fancybox.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.fancybox.js"></script>
+    <script src="~/Content/ShopJS/ProductDetailsScript.js"></script>
+    
+    <script>
+        /********************Add to cart*********************/
+        $(function () {
+            $("a.addtocart").click(function (e) {
+                e.preventDefault();
+
+                $("span.loader").addClass("ib");
+
+                var url = "/cart/AddToCartPartial";
+
+                $.get(url, { id: @Model.Id
+                }, function (data) {
+                    $(".ajaxcart").html(data);
+                }).done(function () {
+                    $("span.loader").removeClass("ib");
+                    $("div.ajaxmsg").addClass("ib");
+
+                    setTimeout(function () {
+                        $("div.ajaxmsg").fadeOut("fast");
+                        $("div.ajaxmsg").removeClass("ib");
+                    }, 2000);
+                });
+            });
+        });
+/****************************************************/
+    </script>
+}

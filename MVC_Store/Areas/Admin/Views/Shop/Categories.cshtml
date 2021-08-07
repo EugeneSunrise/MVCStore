@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MVC_Store.Models.ViewModels.Shop.CategoryVM>
+
+@{
+    ViewBag.Title = "Categories";
+}
+
+<h2>Categories</h2>
+
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+
+<div class="new-cat">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">Category Name</span>
+        </div>
+        <input type="text" id="newcatname" class="form-control" />
+    </div>
+    <p>
+        <a href="#" id="newcata" class="btn btn-success">Add a new category</a>
+        <span class="ajax-text">
+            <img src="~/Content/img/ajax-loader.gif" height="50" />
+        </span>
+    </p>
+</div>
+
+@if (!Model.Any())
+{
+    <h1 class="text-center">There are no categoryie.</h1>
+}
+else
+{
+
+    <table class="table sorting" id="pages">
+        <tr class="home">
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr id="id_@item.Id">
+                <td>
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(modelItem => item.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    @Html.ActionLink("Delete", "DeleteCategory", new { id = item.Id }, new { @class = "delete btn btn-danger" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@section Scripts
+{
+    <script src="~/Content/ShopJS/CategoriesViewJS.js"></script>
+}
